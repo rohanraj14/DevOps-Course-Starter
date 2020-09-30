@@ -3,48 +3,47 @@ import os
 import json
 import requests 
 
-TRELLO_SERVICE_ENDPOINT='http://api.trello.com/1/'
+TRELLO_SERVICE_ENDPOINT='http://api.trello.com/1'
 def get_auth_params():
     return {    
                 'key': os.environ.get('TRELLO_KEY'), 
                 'token': os.environ.get('TRELLO_TOKEN') 
             }
 
-def service_url_get_boards():
+def get_boards_url():
     return TRELLO_SERVICE_ENDPOINT+'/members/me/boards'
 
-def service_get_list_from_board(boardID):
+def get_list_from_board_url(boardID):
     return TRELLO_SERVICE_ENDPOINT+'/boards/'+boardID+'/lists'
 
-def service_create_card():
+def create_card_url():
      return TRELLO_SERVICE_ENDPOINT+'/cards'
 
-def service_get_cards_of_list(listId):
+def get_cards_of_list_url(listId):
      return TRELLO_SERVICE_ENDPOINT+'/lists/'+listId+'/cards'
 
-def service_move_card_url(cardId):
+def move_card_url(cardId):
      return (TRELLO_SERVICE_ENDPOINT+'/cards/%s' % cardId)
 
 
-
 def get_all_boards():
-    response = requests.request("GET", service_url_get_boards(), params=get_auth_params())
-    boards = response.text
+    response = requests.request("GET", get_boards_url(), params=get_auth_params())
+    boards = response.json()
     return boards
 
 def get_board_by_name(name):
-    boards = json.loads(get_all_boards())
+    boards = get_all_boards()
     return next((board for board in boards if board['name'] == name), None)
 
 def get_all_lists():
-    url = service_get_list_from_board(os.environ.get('TRELLO_BOARD_ID'))
+    url = get_list_from_board_url(os.environ.get('TRELLO_BOARD_ID'))
     
     response = requests.get(url, params = get_auth_params())
-    lists = response.text
+    lists = response.json()
     return lists
 
 def get_list_by_name(name):
-    lists = json.loads(get_all_lists())
+    lists = get_all_lists()
     return next((lister for lister in lists if lister['name'] == name), None)
 
 def add_card_by_name(name):
@@ -52,16 +51,17 @@ def add_card_by_name(name):
     extra_params = { 'name': name, 'idList': todo_list['id'] }
     params = get_auth_params()
     params.update(extra_params)
-    url = service_create_card()
-
+    url = create_card_url()
+    print(params)
     response = requests.post(url, params = params)
-    card = response.text
-    return Item.trelloCard(json.loads(card), todo_list)
+    card = response.json
+    print(card)
+    return Item.trelloCard(card, todo_list)
 
 def get_cards_by_list_name(name):
     todo_list = get_list_by_name(name)
     params = get_auth_params()
-    url = service_get_cards_of_list(todo_list['id'])
+    url = get_cards_of_list_url(todo_list['id'])
 
     response = requests.post(url, params = params)
     cards = response.text
@@ -69,7 +69,7 @@ def get_cards_by_list_name(name):
 
 
 def get_all_cards():
-    lists = json.loads(get_all_lists())
+    lists = get_all_lists()
     cards = []
 
     for card_list in lists:
@@ -90,7 +90,7 @@ def move_card_to_new_list(card_id, to_list_name):
     extra_params = { 'idList': to_list['id'] }
     params = get_auth_params()
     params.update(extra_params)
-    url = service_move_card_url(card_id)
+    url = move_card_url(card_id)
 
     response = requests.put(url, params = params)
     card = response.json()

@@ -3,7 +3,7 @@ import os
 import json
 import requests 
 
-TRELLO_SERVICE_ENDPOINT='http://api.trello.com/1'
+TRELLO_SERVICE_ENDPOINT=os.environ.get('TRELLO_URL')
 def get_auth_params():
     return {    
                 'key': os.environ.get('TRELLO_KEY'), 

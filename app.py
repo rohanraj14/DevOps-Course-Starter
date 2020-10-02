@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-import trello_service as trello
+import trello.trello_service  as trello
 
 app = Flask(__name__)
 app.config.from_object('flask_config.Config')
@@ -9,7 +9,8 @@ def index():
     """
     App using Trello API 
     """
-    return render_template('index.html', cards=trello.get_all_cards())
+    items = trello.get_all_cards()
+    return render_template('index.html', cards=items)
 
 @app.route('/card/new', methods=['POST'])
 def add_card():
@@ -20,13 +21,12 @@ def add_card():
     trello.add_card_by_name(name)
     return redirect(url_for('index'))
 
-@app.route('/card/move', methods=['POST'])
-def move_card():
+@app.route('/card/move/<card_id>')
+def move_card(card_id):
     """
     Moving new Trello card
     """
-    card_id = request.form['card_id']
-    to_list = request.form['to_list']
+    to_list = request.args.get('to_list')
     trello.move_card_to_new_list(card_id, to_list)
     return redirect(url_for('index'))
 

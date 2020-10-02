@@ -1,4 +1,4 @@
-from trello_cards import Item
+from trello.trello_cards import Item
 import os
 import json
 import requests 
@@ -54,8 +54,7 @@ def add_card_by_name(name):
     url = create_card_url()
     print(params)
     response = requests.post(url, params = params)
-    card = response.json
-    print(card)
+    card = response.json()
     return Item.trelloCard(card, todo_list)
 
 def get_cards_by_list_name(name):

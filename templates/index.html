@@ -7,6 +7,46 @@
     <p class="lead">Trelllo to-do app.</p>
   </div>
 
+  {% macro display_cards(card) -%}
+      <div class="col-md-4 pb-4">
+        <div class="card border {% if card.status == 'Done' %} border-success {% elif card.status == 'To Do' %}  border-info {% else %} border-primary {% endif %} ">
+          <div class="card-header">
+            <div class="row">
+              <div class="col-md-9">
+                <h5>{{card.name}}</h5>
+              </div>
+              <div class="col-md-3 ">
+                <span class=" badge {% if card.status == 'Done' %} badge-success {% elif card.status == 'To Do' %}  badge-info {% else %} badge-primary {% endif %}"> 
+                      {{card.status}}
+                </span>
+              </div>
+            </div>
+          </div>   
+          <div class="card-body form-group">
+            <div class="row">
+              <div class="col-md-12">
+                <h6 class="card-subtitle mb-2 text-muted">ID : {{card.id}}</h6>
+              </div>              
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                  {% if card.status == 'To Do' %}
+                    <a class="btn btn-light btn-sm " href="{{ url_for('move_card', card_id=card.id) }}?to_list=Doing">Start</a>
+                  {% endif %}
+                  {% if card.status == 'Doing' %}
+                    <a class="btn btn-light btn-sm " href="{{ url_for('move_card', card_id=card.id) }}?to_list=Done">Complete</a>
+                  {% endif %}
+                  {% if card.status == 'Done' %}
+                    <a class="btn btn-light btn-sm "  href="{{ url_for('move_card', card_id=card.id) }}?to_list=To Do">Start Again</a>
+                  {% endif %}
+              </div>
+            </div>
+          </div>
+        </div> 
+      </div>      
+  {%- endmacro %}
+ 
+
   <div class="flex  pt-4 mb-4">
     <form action="{{ url_for('add_card') }}" method="post">
       <div class="col-md-12 form-group row">
@@ -19,51 +59,33 @@
         <button class="btn btn-primary" type="submit" title="Add Card">Add It</button>
       </div>
     </form>
-    <div class="container ">
-        <h2>Cards </h2>
-        <div class=" row row-cols-1 row-cols-sm-2 row-cols-md-4">
+       
           <!-- List the todo items here -->
-          {% for card in cards %} 
-          <div class="col-md-4 pb-4">
-            <div class="card border {% if card.status == 'Done' %} border-success {% elif card.status == 'To Do' %}  border-info {% else %} border-primary {% endif %} ">
-              <div class="card-header">
-                <div class="row">
-                  <div class="col-md-9">
-                    <h5>{{card.name}}</h5>
-                  </div>
-                  <div class="col-md-3 ">
-                    <span class=" badge {% if card.status == 'Done' %} badge-success {% elif card.status == 'To Do' %}  badge-info {% else %} badge-primary {% endif %}"> 
-                          {{card.status}}
-                    </span>
-                  </div>
-                </div>
-              </div>   
-              <div class="card-body form-group">
-                <div class="row">
-                  <div class="col-md-12">
-                    <h6 class="card-subtitle mb-2 text-muted">ID : {{card.id}}</h6>
-                  </div>              
-                </div>
-                <div class="row">
-                  <div class="col-md-6">
-                      {% if card.status == 'To Do' %}
-                        <a class="btn btn-primary btn-sm " href="{{ url_for('move_card', card_id=card.id) }}?to_list=Doing">Start</a>
-                      {% endif %}
-                      {% if card.status == 'Doing' %}
-                        <a class="btn btn-primary btn-sm " href="{{ url_for('move_card', card_id=card.id) }}?to_list=Done">Complete</a>
-                      {% endif %}
-                      {% if card.status == 'Done' %}
-                        <a class="btn btn-primary btn-sm "  href="{{ url_for('move_card', card_id=card.id) }}?to_list=To Do">Start Again</a>
-                      {% endif %}
-                  </div>
-                </div>
+          <div>
+          {% for group_cards in cards|groupby('status') %} 
+          
+          {% if group_cards.grouper == 'Done' %} 
+            {% set border_style = 'border-success' %}
+            {% set group_title = 'Tasks completed' %}
+          {% elif group_cards.grouper == 'To Do' %}  
+            {% set border_style = 'border-info'  %}
+            {% set group_title = 'Tasks not yet picked' %}
+          {% else %} 
+            {% set border_style = 'border-primary' %} 
+            {% set group_title = 'Tasks in progress' %}
+          {% endif %}
+            <div class="container border boder-thik {{border_style}}"> 
+              <h2 class="mt-3">{{ group_title }}</h2>
+              <hr>
+              <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4">
+                  {% for card in group_cards.list %} 
+                  
+                    {{ display_cards(card)  }}
+                  {% endfor %}
               </div>
-            </div> 
-          </div>
-          {% endfor %}
-
+            </div>
+          {% endfor %}</div>
         </div>
-      </div>
     </div>
   </div>
 {% endblock %}

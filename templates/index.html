@@ -7,13 +7,14 @@
     <p class="lead">Trelllo to-do app.</p>
   </div>
 
-  {% macro display_cards(card) -%}
+  {% macro display_cards(card, group_title, border_style) -%}
       <div class="col-md-4 pb-4">
         <div class="card border {% if card.status == 'Done' %} border-success {% elif card.status == 'To Do' %}  border-info {% else %} border-primary {% endif %} ">
           <div class="card-header">
             <div class="row">
               <div class="col-md-9">
                 <h5>{{card.name}}</h5>
+                <span>Last changed: {{card.dateLastActivity.strftime('%d-%m-%Y')}}</span>
               </div>
               <div class="col-md-3 ">
                 <span class=" badge {% if card.status == 'Done' %} badge-success {% elif card.status == 'To Do' %}  badge-info {% else %} badge-primary {% endif %}"> 
@@ -43,49 +44,72 @@
             </div>
           </div>
         </div> 
-      </div>      
+      </div>     
   {%- endmacro %}
  
 
   <div class="flex  pt-4 mb-4">
-    <form action="{{ url_for('add_card') }}" method="post">
-      <div class="col-md-12 form-group row">
-        <div class="input-group input-group-sm mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-sm">New Item</span>
-          </div>
-        <input class="form-control" type="text" name="new_card" id="item" required/>
-        </div>  
-        <button class="btn btn-primary" type="submit" title="Add Card">Add It</button>
-      </div>
-    </form>
-       
-          <!-- List the todo items here -->
-          <div>
-          {% for group_cards in cards|groupby('status') %} 
-          
-          {% if group_cards.grouper == 'Done' %} 
-            {% set border_style = 'border-success' %}
-            {% set group_title = 'Tasks completed' %}
-          {% elif group_cards.grouper == 'To Do' %}  
-            {% set border_style = 'border-info'  %}
-            {% set group_title = 'Tasks not yet picked' %}
-          {% else %} 
-            {% set border_style = 'border-primary' %} 
-            {% set group_title = 'Tasks in progress' %}
-          {% endif %}
-            <div class="container border boder-thik {{border_style}}"> 
-              <h2 class="mt-3">{{ group_title }}</h2>
-              <hr>
-              <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4">
-                  {% for card in group_cards.list %} 
-                  
-                    {{ display_cards(card)  }}
-                  {% endfor %}
+        <form action="{{ url_for('add_card') }}" method="post">
+          <div class="col-md-12 form-group row">
+            <div class="input-group input-group-sm mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">New Item</span>
               </div>
-            </div>
-          {% endfor %}</div>
-        </div>
-    </div>
+            <input class="form-control" type="text" name="new_card" id="item" required/>
+            </div>  
+            <button class="btn btn-primary" type="submit" title="Add Card">Add It</button>
+          </div>
+        </form>
+       
+          <!-- List the categories here -->
+
+              <div class="container border boder-thik border-info"> 
+                  <h2 class="mt-3">Tasks in queue</h2>
+                  <hr>
+                  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4">
+                    {% for cards in  view_model.get_all_item_of_type('To Do') %}
+                      {{ display_cards(cards)  }}
+                    {% endfor %}
+                  </div>
+                </div>
+             
+              <div class="container border boder-thik border-primary"> 
+                <h2 class="mt-3">Tasks in progress</h2>
+                <hr>
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4">
+                  {% for cards in  view_model.get_all_item_of_type('Doing') %}
+                    {{ display_cards(cards)  }}
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="container border boder-thik border-success"> 
+                <h2 class="mt-3">Tasks completed</h2>
+                <hr>
+                {% set done_items_all = view_model.show_all_done_items() %}
+                {% if done_items_all|length <= 5 %}
+                  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 "> 
+                    {% for cards in  done_items_all%}
+                      {{ display_cards(cards )  }}
+                    {% endfor %}
+                  </div>
+                {% else %}
+                  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 "> 
+                    {% for cards in  view_model.recent_done_items()%}
+                      {{ display_cards(cards )  }}
+                    {% endfor %}
+                  </div>
+                  <details>
+                    <summary>Older</summary>
+                    <hr>
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 "> 
+                      {% for cards in  view_model.older_done_items()%}
+                        {{ display_cards(cards )  }}
+                      {% endfor %}
+                    </div>
+                  </details>
+                {% endif %}
+              </div>
+            
+        
   </div>
 {% endblock %}

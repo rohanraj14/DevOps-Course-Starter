@@ -2,8 +2,13 @@ from flask import Flask, render_template, request, redirect, url_for
 import trello.trello_service  as trello
 from trello.view_model  import ViewModel
 
-app = Flask(__name__)
-app.config.from_object('flask_config.Config')
+def create_app(): 
+    app = Flask(__name__)
+    app.config.from_object('flask_config.Config')
+
+    return app
+
+app = create_app()
 
 @app.route('/')
 def index():

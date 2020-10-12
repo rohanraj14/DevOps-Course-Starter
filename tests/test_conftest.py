@@ -2,6 +2,7 @@ import pytest
 import dotenv
 import app
 import json
+from trello import trello_service
 from unittest.mock import Mock, patch
 from patch_requests import patch_requests
 
@@ -31,10 +32,7 @@ def client():
     # Use the app to create a test_client that can be used in our tests.
     with test_app.test_client() as client:
         yield client
-# 'http://api.trello.com/1//boards/5f5a958fa07c17615cc9e37f/lists'
-# 'http://api.trello.com/1//lists/5f5a958fa07c17615cc9e380/cards'
-# 'http://api.trello.com/1//lists/5f5a958fa07c17615cc9e381/cards'
-# 'http://api.trello.com/1//lists/5f5a958fa07c17615cc9e382/cards'
+        
 
 def mock_get_lists(url, param):
     if url == 'http://api.trello.com/1/boards/5f5a958fa07c17615cc9e37f/lists' :
@@ -44,12 +42,15 @@ def mock_get_lists(url, param):
     elif url == 'http://api.trello.com/1/lists/5f5a958fa07c17615cc9e380/cards':
         mockresponse_todo = Mock()
         mockresponse_todo.json.return_value = sample_response_todo
+        return mockresponse_todo
     elif url == 'http://api.trello.com/1/lists/5f5a958fa07c17615cc9e381/cards':
         mockresponse_doing = Mock()
         mockresponse_doing.json.return_value = sample_response_doing
+        return mockresponse_doing
     elif url == 'http://api.trello.com/1/lists/5f5a958fa07c17615cc9e382/cards':
         mockresponse_done = Mock()
         mockresponse_done.json.return_value = sample_response_done
+        return mockresponse_done
     return None
 
 @patch('requests.get')

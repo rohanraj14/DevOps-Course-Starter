@@ -62,7 +62,7 @@ def get_cards_by_list_name(name):
     params = get_auth_params()
     url = get_cards_of_list_url(todo_list['id'])
 
-    response = requests.post(url, params = params)
+    response = requests.get(url, params = params)
     cards = response.json()
     return cards
 

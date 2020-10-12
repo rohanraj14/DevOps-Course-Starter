@@ -63,7 +63,7 @@ def get_cards_by_list_name(name):
     url = get_cards_of_list_url(todo_list['id'])
 
     response = requests.post(url, params = params)
-    cards = response.text
+    cards = response.json()
     return cards
 
 
@@ -72,9 +72,8 @@ def get_all_cards():
     cards = []
 
     for card_list in lists:
-        lists_cards = get_cards_by_list_name(card_list['name'])
-        list_card_json = json.loads(lists_cards)
-        for card in list_card_json:
+        list_cards = get_cards_by_list_name(card_list['name'])
+        for card in list_cards:
             cards.append(Item.trelloCard(card, card_list))
     return cards
 

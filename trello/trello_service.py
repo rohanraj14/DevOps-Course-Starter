@@ -3,27 +3,30 @@ import os
 import json
 import requests 
 
-TRELLO_SERVICE_ENDPOINT=os.environ.get('TRELLO_URL')
+# TRELLO_SERVICE_ENDPOINT='http://api.trello.com/1'
 def get_auth_params():
     return {    
                 'key': os.environ.get('TRELLO_KEY'), 
                 'token': os.environ.get('TRELLO_TOKEN') 
             }
 
+def get_trello_endpoint():
+    return os.environ.get('TRELLO_URL')
+
 def get_boards_url():
-    return TRELLO_SERVICE_ENDPOINT+'/members/me/boards'
+    return get_trello_endpoint()+'/members/me/boards'
 
 def get_list_from_board_url(boardID):
-    return TRELLO_SERVICE_ENDPOINT+'/boards/'+boardID+'/lists'
+    return get_trello_endpoint()+'/boards/'+boardID+'/lists'
 
 def create_card_url():
-     return TRELLO_SERVICE_ENDPOINT+'/cards'
+     return get_trello_endpoint()+'/cards'
 
 def get_cards_of_list_url(listId):
-     return TRELLO_SERVICE_ENDPOINT+'/lists/'+listId+'/cards'
+     return get_trello_endpoint()+'/lists/'+listId+'/cards'
 
 def move_card_url(cardId):
-     return (TRELLO_SERVICE_ENDPOINT+'/cards/%s' % cardId)
+     return (get_trello_endpoint()+'/cards/%s' % cardId)
 
 
 def get_all_boards():

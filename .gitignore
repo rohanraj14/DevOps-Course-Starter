@@ -92,6 +92,7 @@ celerybeat-schedule
 .mr.developer.cfg
 .project
 .pydevproject
+.vagrant
 
 # mkdocs documentation
 /site

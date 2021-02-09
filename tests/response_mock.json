@@ -1,0 +1,29 @@
+[
+    {
+        "id": "5f5a958fa07c17615cc9e380",
+        "name": "To Do",
+        "closed": false,
+        "pos": 16384,
+        "softLimit": null,
+        "idBoard": "5f5a958fa07c17615cc9e37f",
+        "subscribed": false
+    },
+    {
+        "id": "5f5a958fa07c17615cc9e381",
+        "name": "Doing",
+        "closed": false,
+        "pos": 32768,
+        "softLimit": null,
+        "idBoard": "5f5a958fa07c17615cc9e37f",
+        "subscribed": false
+    },
+    {
+        "id": "5f5a958fa07c17615cc9e382",
+        "name": "Done",
+        "closed": false,
+        "pos": 49152,
+        "softLimit": null,
+        "idBoard": "5f5a958fa07c17615cc9e37f",
+        "subscribed": false
+    }
+]

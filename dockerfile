@@ -21,9 +21,3 @@ ENTRYPOINT ["poetry", "run", "flask", "run", "--host", "0.0.0.0"]
 FROM base as production
 EXPOSE 5000
 ENTRYPOINT ["poetry", "run", "gunicorn", "-c", "gunicorn_config.py", "wsgi:app"]
-
-
-
-#Run and Build for local
-#docker run --env-file ./.env -p 5000:5000 --mount type=bind,source=/.,target=/app rohanraj14/todo-app:dev
-#docker build --target development --tag rohanraj14/todo-app:dev .

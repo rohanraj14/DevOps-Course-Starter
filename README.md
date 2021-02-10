@@ -1,9 +1,5 @@
 # DevOps Apprenticeship: Project Exercise
 
-## Getting started
-
-The project uses a virtual environment to isolate package dependencies. To create the virtual environment and install required packages, run the following from a bash shell terminal:
-
 ### On macOS and Linux
 ```bash
 $ source setup.sh
@@ -19,7 +15,8 @@ $ source setup.sh --windows
 
 Once the setup script has completed and all packages have been installed, start the Flask app by running:
 ```bash
-$ flask run
+$ poetry install 
+$ poetry run flask run
 ```
 
 You should see output similar to the following:
@@ -40,3 +37,35 @@ The `.env` file is used by flask to set environment variables when running `flas
 * There's also a [SECRET_KEY](https://flask.palletsprojects.com/en/1.1.x/config/#SECRET_KEY) variable which is used to encrypt the flask session cookie.
 
 When running `setup.sh`, the `.env.template` file will be copied to `.env` if the latter does not exist.
+
+### Run on Vagrant as VM
+```bash
+$ vagrant up
+$ vagrant provision
+$ vagrant up --provision
+
+Some usable commands: 
+$ vagrant reload (to restart/stop app)
+$ vagrant ssh
+$ vagrant suspend
+
+```
+
+### Run on Docker commands:
+```bash
+$ docker build --tag rohanraj14/todo-app .
+$ docker run -p 5000:5000 --env-file .env rohanraj14/todo-app
+```
+
+
+### Run on Docker as VM commands:
+#### 1. Run and Build for local dev environment
+```bash
+$ docker run --env-file ./.env -p 5000:5000 --mount type=bind,source=/.,target=/app rohanraj14/todo-app:dev
+$ docker build --target development --tag rohanraj14/todo-app:dev .
+```
+#### 2. Run and Build for production environment
+```bash
+$ docker run --env-file ./.env -p 5000:5000 --mount type=bind,source=/.,target=/app rohanraj14/todo-app:prod
+$ docker build --target production --tag rohanraj14/todo-app:prod .
+```

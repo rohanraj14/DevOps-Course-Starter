@@ -96,3 +96,33 @@ def move_card_to_new_list(card_id, to_list_name):
     card = response.json()
 
     return card
+
+def create_trello_board():
+    url = "https://api.trello.com/1/boards/"
+
+    extra_params = { 'name': 'To-Do App' }
+    params = get_auth_params()
+    params.update(extra_params)
+    print(params)
+    response = requests.request(
+        "POST",
+        url,
+        params = params
+    )
+
+    print(response.text)
+    board_json = response.json()
+    print(board_json['id'])
+    return board_json['id']
+
+
+def delete_trello_board(board_id):
+    url = get_trello_endpoint()+'/boards/'+board_id
+
+    response = requests.request(
+        "DELETE",
+        url,
+        params=get_auth_params()
+    )
+
+    print(response.text)

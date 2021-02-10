@@ -34,7 +34,3 @@ def create_app():
         return redirect(url_for('index'))
     
     return app
-
-
-# if __name__ == '__main__':
-#     app.run()

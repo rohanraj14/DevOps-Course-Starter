@@ -54,5 +54,5 @@ def test_index_page(mock_get_requests, client):
     response = client.get('/')
 
     assert response.status_code == 200
-
+    assert "Doing" in response.data.decode()  
 

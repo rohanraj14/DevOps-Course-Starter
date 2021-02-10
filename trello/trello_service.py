@@ -55,7 +55,6 @@ def add_card_by_name(name):
     params = get_auth_params()
     params.update(extra_params)
     url = create_card_url()
-    print(params)
     response = requests.post(url, params = params)
     card = response.json()
     return Item.trelloCard(card, todo_list)

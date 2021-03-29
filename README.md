@@ -59,5 +59,5 @@ $ docker run --env-file ./.env -p 5000:5000 --mount type=bind,source=/.,target=/
 #### 2. Run and Build for production environment
 ```bash
 $ docker build --target production --tag rohanraj14/todo-app:prod .
-$ docker run --env-file ./.env -p 5000:5000 --mount type=bind,source=/.,target=/app rohanraj14/todo-app:prod
+$ docker run --env-file ./.env -p 5000:5000  rohanraj14/todo-app:prod
 ```

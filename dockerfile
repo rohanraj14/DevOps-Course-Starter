@@ -6,11 +6,14 @@ RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-
 ENV PATH = "${PATH}:/root/.poetry/bin"
 
 RUN mkdir TO-DO-APP
-COPY . ./TO-DO-APP
 
 WORKDIR /TO-DO-APP
-RUN poetry install
 
+COPY poetry.lock .
+COPY pyproject.toml .
+RUN poetry install
+COPY . .
+    
 # Configuration for local development
 FROM base as development
 EXPOSE 5000

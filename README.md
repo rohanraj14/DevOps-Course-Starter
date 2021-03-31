@@ -1,6 +1,6 @@
 # DevOps Apprenticeship: Project Exercise
 
-## Getting started
+## Getting started - running without docker in VM locally
 
 The project uses a virtual environment to isolate package dependencies. To create the virtual environment and install required packages, run the following from a bash shell terminal:
 
@@ -8,6 +8,17 @@ The project uses a virtual environment to isolate package dependencies. To creat
 ```
 $ cp .env.template .env 
 ```
+
+Get Poetry
+```
+$ curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+```
+Set Source
+
+```
+$ source $HOME/.poetry/env
+```
+
 Once the setup script has completed and all packages have been installed, start the Flask app by running:
 ```bash
 $ poetry install 
@@ -60,4 +71,9 @@ $ docker run --env-file ./.env -p 5000:5000 --mount type=bind,source=/.,target=/
 ```bash
 $ docker build --target production --tag rohanraj14/todo-app:prod .
 $ docker run --env-file ./.env -p 5000:5000  rohanraj14/todo-app:prod
+```
+
+### GitPod start docker
+```
+$ sudo docker-up
 ```

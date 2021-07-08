@@ -11,7 +11,7 @@ WORKDIR /TO-DO-APP
 
 COPY poetry.lock .
 COPY pyproject.toml .
-RUN poetry install
+RUN poetry config virtualenvs.create false --local && poetry install
 COPY . .
     
 # Configuration for local development
